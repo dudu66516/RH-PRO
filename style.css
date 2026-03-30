@@ -11,22 +11,40 @@ body {
   width: 220px;
   background: #020617;
   padding: 20px;
+  min-height: 100vh;
+}
+
+.sidebar h2 {
+  color: #38bdf8;
 }
 
 .sidebar li {
   padding: 10px;
   cursor: pointer;
+  color: #cbd5f5;
 }
 
+/* MAIN */
 .main {
   flex: 1;
+}
+
+/* TOPBAR */
+.topbar {
+  background: #020617;
+  padding: 15px 20px;
+  border-bottom: 1px solid #1e293b;
+}
+
+/* PÁGINAS */
+.pagina {
   padding: 20px;
 }
 
 /* CARDS */
 .cards {
   display: flex;
-  gap: 10px;
+  gap: 15px;
 }
 
 .card {
@@ -36,10 +54,20 @@ body {
   flex: 1;
 }
 
+/* INPUT */
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #1e293b;
+  color: white;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
 /* TABELA */
 table {
   width: 100%;
-  margin-top: 15px;
   background: #1e293b;
   border-radius: 10px;
 }
@@ -61,12 +89,6 @@ button {
 .btn-aprovado { background: #22c55e; }
 .btn-reprovado { background: #ef4444; }
 
-/* LOADING */
-.loading {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
 /* TOAST */
 #toast {
   position: fixed;
@@ -81,4 +103,5 @@ button {
 /* GRAFICO */
 .grafico-container {
   height: 300px;
+  margin-top: 20px;
 }
