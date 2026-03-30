@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>RH PRO</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>🚀 RS</h2>
+  <ul>
+    <li data-page="dashboard" class="active">📊 Dashboard</li>
+    <li data-page="candidatos">👥 Candidatos</li>
+  </ul>
+</div>
+
+<div class="main">
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="pagina">
+    <h1>📊 Dashboard</h1>
+
+    <div class="cards">
+      <div class="card">
+        <h2 id="total">0</h2>
+        <p>Total</p>
+      </div>
+
+      <div class="card">
+        <h2 id="aprovados">0</h2>
+        <p>Aprovados</p>
+      </div>
+
+      <div class="card">
+        <h2 id="tempoMedio">—</h2>
+        <p>Dias médios</p>
+      </div>
+    </div>
+
+    <div class="grafico-container">
+      <canvas id="grafico"></canvas>
+    </div>
+  </div>
+
+  <!-- CANDIDATOS -->
+  <div id="candidatos" class="pagina" style="display:none;">
+    <h1>👥 Candidatos</h1>
+
+    <div class="last-action" id="lastAction">
+      Nenhuma ação recente
+    </div>
+
+    <input id="busca" placeholder="🔍 Buscar...">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Vaga</th>
+          <th>Status</th>
+          <th>Tempo</th>
+          <th>Currículo</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

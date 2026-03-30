@@ -1,0 +1,161 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Arial;
+  display: flex;
+  background: #13213b;
+  color: #fff;
+}
+
+.sidebar {
+  width: 220px;
+  background: #020617;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.sidebar h2 {
+  color: #38bdf8;
+  margin-bottom: 25px;
+}
+
+.sidebar li {
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #cbd5f5;
+  transition: 0.2s;
+}
+
+.sidebar li:hover,
+.sidebar li.active {
+  background: #1e293b;
+}
+
+.main {
+  flex: 1;
+  padding: 25px;
+}
+
+.pagina {
+  animation: fade 0.3s;
+}
+
+@keyframes fade {
+  from {opacity:0; transform: translateY(10px);}
+  to {opacity:1;}
+}
+
+.cards {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card {
+  flex: 1;
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.last-action {
+  background: #1e293b;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  color: #38bdf8;
+}
+
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #0f172a;
+  color: white;
+  margin-bottom: 15px;
+}
+
+table {
+  width: 100%;
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px;
+}
+
+th {
+  background: #334155;
+}
+
+tr {
+  border-bottom: 1px solid #334155;
+}
+
+tr:hover {
+  background: #2a3b55;
+}
+
+td:nth-child(1) {
+  font-weight: bold;
+}
+
+td:nth-child(2) {
+  color: #94a3b8;
+}
+
+td:nth-child(6) {
+  display: flex;
+  gap: 5px;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.aprovado { background: #22c55e; color: black; }
+.reprovado { background: #ef4444; }
+.analise { background: #facc15; color: black; }
+.pendente { background: #94a3b8; color: black; }
+
+button {
+  border: none;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.btn-analise { background: #facc15; }
+.btn-aprovado { background: #22c55e; }
+.btn-reprovado { background: #ef4444; }
+
+.grafico-container {
+  margin-top: 20px;
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  padding: 25px;
+  border-radius: 15px;
+}
+
+#grafico {
+  max-height: 300px;
+}
