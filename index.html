@@ -9,8 +9,10 @@
 </head>
 <body>
 
+<!-- 🔥 BOTÃO MOBILE -->
 <div class="menu-btn" onclick="toggleMenu()">☰</div>
 
+<!-- 🔥 SIDEBAR -->
 <div class="sidebar">
   <h2>🚀 RS</h2>
   <ul>
@@ -19,62 +21,68 @@
   </ul>
 </div>
 
+<!-- 🔥 MAIN -->
 <div class="main">
 
-  <!-- DASHBOARD -->
-  <div id="dashboard" class="pagina">
-    <h1>📊 Dashboard</h1>
+  <!-- 🔥 CONTAINER CENTRAL (ESSENCIAL) -->
+  <div class="container">
 
-    <div class="cards">
-      <div class="card">
-        <h2 id="total">0</h2>
-        <p>Total</p>
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="pagina">
+      <h1>📊 Dashboard</h1>
+
+      <div class="cards">
+        <div class="card">
+          <h2 id="total">0</h2>
+          <p>Total</p>
+        </div>
+
+        <div class="card">
+          <h2 id="aprovados">0</h2>
+          <p>Aprovados</p>
+        </div>
+
+        <div class="card">
+          <h2 id="tempoMedio">0</h2>
+          <p>Dias médios</p>
+        </div>
       </div>
 
-      <div class="card">
-        <h2 id="aprovados">0</h2>
-        <p>Aprovados</p>
-      </div>
-
-      <div class="card">
-        <h2 id="tempoMedio">0</h2>
-        <p>Dias médios</p>
+      <div class="grafico-container">
+        <canvas id="grafico"></canvas>
       </div>
     </div>
 
-    <div class="grafico-container">
-      <canvas id="grafico"></canvas>
+    <!-- CANDIDATOS -->
+    <div id="candidatos" class="pagina" style="display:none;">
+      <h1>👥 Candidatos</h1>
+
+      <div class="last-action" id="lastAction">
+        Nenhuma ação recente
+      </div>
+
+      <input id="busca" placeholder="🔍 Buscar...">
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Vaga</th>
+              <th>Status</th>
+              <th>Tempo</th>
+              <th>Currículo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
     </div>
-  </div>
 
-  <!-- CANDIDATOS -->
-  <div id="candidatos" class="pagina" style="display:none;">
-    <h1>👥 Candidatos</h1>
+  </div> <!-- FIM CONTAINER -->
 
-    <div class="last-action" id="lastAction">
-      Nenhuma ação recente
-    </div>
-
-    <input id="busca" placeholder="🔍 Buscar...">
-
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Vaga</th>
-            <th>Status</th>
-            <th>Tempo</th>
-            <th>Currículo</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
+</div> <!-- FIM MAIN -->
 
 <script src="script.js"></script>
 </body>
