@@ -3,32 +3,40 @@ const API = "https://script.google.com/macros/s/AKfycbxdqGlqydqKBHC_P0_zN8qK9ren
 let candidatos = [];
 let grafico;
 
-/* MENU MOBILE */
+/* MENU */
 function toggleMenu() {
   document.querySelector(".sidebar").classList.toggle("active");
 }
 
-/* TROCAR PAGINA */
+/* PAGINAS */
 function mostrarPagina(pagina) {
   document.querySelectorAll(".pagina").forEach(p => p.style.display = "none");
   document.getElementById(pagina).style.display = "block";
 }
 
-/* 🔥 BUSCAR DADOS */
+/* 🔥 CARREGAR DADOS CORRETO */
 async function carregarDados() {
   try {
     const res = await fetch(API);
-    candidatos = await res.json();
+    const dados = await res.json();
+
+    // 🔥 CONVERSÃO DA PLANILHA
+    candidatos = dados.map(linha => ({
+      nome: linha[1],
+      vaga: linha[3],
+      curriculo: linha[4],
+      status: linha[5]
+    }));
 
     atualizarTabela();
     atualizarDashboard();
 
   } catch (erro) {
-    console.error("Erro ao carregar dados:", erro);
+    console.error("Erro:", erro);
   }
 }
 
-/* 🔥 TABELA */
+/* TABELA */
 function atualizarTabela() {
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
@@ -51,10 +59,9 @@ function atualizarTabela() {
   });
 }
 
-/* 🔥 MUDAR STATUS (SEM DELAY + SEM VOLTAR) */
+/* 🔥 SEM DELAY */
 async function mudarStatus(index, status) {
 
-  // Atualiza na tela IMEDIATO
   candidatos[index].status = status;
   atualizarTabela();
   atualizarDashboard();
@@ -67,13 +74,12 @@ async function mudarStatus(index, status) {
         status: status
       })
     });
-
   } catch (erro) {
     console.error("Erro ao salvar:", erro);
   }
 }
 
-/* 🔥 DASHBOARD */
+/* DASHBOARD */
 function atualizarDashboard() {
   const total = candidatos.length;
   const aprovados = candidatos.filter(c => c.status === "Aprovado").length;
