@@ -1,4 +1,4 @@
-const url = "https://script.google.com/macros/s/AKfycbybs1NfUfWZx05jO2tclT4RF8qgnLXx9UnmnlImx_qcNCnIySVyK-wYbv_ncePnfFn4-Q/exec";
+const url = "https://script.google.com/macros/s/AKfycbxdqGlqydqKBHC_P0_zN8qK9ren9k07mHuk12vdqyuvYZPUi3a1DUU-CojaArIp3w4DRQ/exec";
 
 let dados = [];
 let chart;
