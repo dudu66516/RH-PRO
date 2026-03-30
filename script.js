@@ -2,6 +2,7 @@ const API = "https://script.google.com/macros/s/AKfycbxl_32ZS2tOeuHY_bvEpJaVLykp
 
 let candidatos = [];
 let grafico;
+let salvando = new Set(); // 🔥 controla quem está salvando
 
 /* PAGINA */
 function mostrarPagina(p) {
@@ -10,9 +11,10 @@ function mostrarPagina(p) {
 }
 
 /* TOAST */
-function mostrarToast(msg) {
+function mostrarToast(msg, cor = "#22c55e") {
   const toast = document.getElementById("toast");
   toast.innerText = msg;
+  toast.style.background = cor;
   toast.style.display = "block";
 
   setTimeout(() => {
@@ -22,20 +24,26 @@ function mostrarToast(msg) {
 
 /* CARREGAR */
 async function carregarDados() {
-  const res = await fetch(API);
-  const dados = await res.json();
+  try {
+    const res = await fetch(API);
+    const dados = await res.json();
 
-  const linhas = dados.slice(1);
+    const linhas = dados.slice(1);
 
-  candidatos = linhas.map((l, i) => ({
-    nome: l[1],
-    vaga: l[3],
-    curriculo: l[4],
-    status: l[5],
-    linha: i + 2
-  }));
+    candidatos = linhas.map((l, i) => ({
+      nome: l[1],
+      vaga: l[3],
+      curriculo: l[4],
+      status: l[5],
+      linha: i + 2
+    }));
 
-  render();
+    render();
+
+  } catch (e) {
+    console.error(e);
+    mostrarToast("Erro ao carregar dados", "#ef4444");
+  }
 }
 
 /* RENDER */
@@ -50,6 +58,9 @@ function renderTabela() {
   tbody.innerHTML = "";
 
   candidatos.forEach((c, i) => {
+
+    const bloqueado = salvando.has(c.linha);
+
     tbody.innerHTML += `
       <tr>
         <td>${c.nome}</td>
@@ -57,37 +68,49 @@ function renderTabela() {
         <td>${c.status}</td>
         <td>${c.curriculo ? `<a href="${c.curriculo}" target="_blank">Ver</a>` : "-"}</td>
         <td>
-          <button onclick="mudarStatus(${i}, 'Em análise')" class="btn-analise">🟡</button>
-          <button onclick="mudarStatus(${i}, 'Aprovado')" class="btn-aprovado">✅</button>
-          <button onclick="mudarStatus(${i}, 'Reprovado')" class="btn-reprovado">❌</button>
+          <button ${bloqueado ? "disabled" : ""} onclick="mudarStatus(${i}, 'Em análise')" class="btn-analise">🟡</button>
+          <button ${bloqueado ? "disabled" : ""} onclick="mudarStatus(${i}, 'Aprovado')" class="btn-aprovado">✅</button>
+          <button ${bloqueado ? "disabled" : ""} onclick="mudarStatus(${i}, 'Reprovado')" class="btn-reprovado">❌</button>
         </td>
       </tr>
     `;
   });
 }
 
-/* STATUS */
-async function mudarStatus(i, status) {
+/* 🔥 STATUS SEM DELAY REAL */
+function mudarStatus(i, status) {
 
-  const row = candidatos[i];
+  const c = candidatos[i];
 
-  // UI instantânea (sem delay)
-  row.status = status;
+  // 🔒 evita múltiplos cliques
+  if (salvando.has(c.linha)) return;
+
+  salvando.add(c.linha);
+
+  // ⚡ atualização instantânea
+  c.status = status;
   render();
 
-  document.body.classList.add("loading");
+  mostrarToast("Salvando...", "#facc15");
 
-  await fetch(API, {
+  // 🚀 FIRE AND FORGET (não espera)
+  fetch(API, {
     method: "POST",
     body: JSON.stringify({
-      linha: row.linha,
+      linha: c.linha,
       status: status
     })
+  })
+  .then(() => {
+    mostrarToast("✅ Salvo com sucesso!");
+  })
+  .catch(() => {
+    mostrarToast("Erro ao salvar", "#ef4444");
+  })
+  .finally(() => {
+    salvando.delete(c.linha);
+    render(); // reativa botões
   });
-
-  document.body.classList.remove("loading");
-
-  mostrarToast("✅ Status atualizado!");
 }
 
 /* GRAFICO */
