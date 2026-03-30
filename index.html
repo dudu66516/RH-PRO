@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>RH PRO</title>
+  <title>FlowSystem</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,22 +11,37 @@
 
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-  <h2>🚀 RS</h2>
+  <h2>⚡ FlowSystem</h2>
   <ul>
     <li onclick="mostrarPagina('dashboard')">📊 Dashboard</li>
     <li onclick="mostrarPagina('candidatos')">👥 Candidatos</li>
   </ul>
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <span>🚀 Sistema de Gestão</span>
+  </div>
+
+  <!-- DASHBOARD -->
   <div id="dashboard" class="pagina">
-    <h1>📊 Dashboard</h1>
+    <h1>Dashboard</h1>
 
     <div class="cards">
-      <div class="card"><h2 id="total">0</h2><p>Total</p></div>
-      <div class="card"><h2 id="aprovados">0</h2><p>Aprovados</p></div>
+      <div class="card">
+        <h2 id="total">0</h2>
+        <p>Total</p>
+      </div>
+
+      <div class="card">
+        <h2 id="aprovados">0</h2>
+        <p>Aprovados</p>
+      </div>
     </div>
 
     <div class="grafico-container">
@@ -34,12 +49,13 @@
     </div>
   </div>
 
+  <!-- CANDIDATOS -->
   <div id="candidatos" class="pagina" style="display:none;">
-    <h1>👥 Candidatos</h1>
+    <h1>Candidatos</h1>
 
     <div id="toast"></div>
 
-    <input id="busca" placeholder="🔍 Buscar...">
+    <input id="busca" placeholder="🔍 Buscar candidato...">
 
     <table>
       <thead>
