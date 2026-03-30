@@ -3,46 +3,49 @@ const API = "https://script.google.com/macros/s/AKfycbxl_32ZS2tOeuHY_bvEpJaVLykp
 let candidatos = [];
 let grafico;
 
-/* MENU */
-function toggleMenu() {
-  document.querySelector(".sidebar").classList.toggle("active");
+/* PAGINA */
+function mostrarPagina(p) {
+  document.querySelectorAll(".pagina").forEach(el => el.style.display = "none");
+  document.getElementById(p).style.display = "block";
 }
 
-/* PAGINAS */
-function mostrarPagina(pagina) {
-  document.querySelectorAll(".pagina").forEach(p => p.style.display = "none");
-  document.getElementById(pagina).style.display = "block";
+/* TOAST */
+function mostrarToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.innerText = msg;
+  toast.style.display = "block";
+
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 2000);
 }
 
-/* 🔥 CARREGAR DADOS (AJUSTADO PRA SUA API REAL) */
+/* CARREGAR */
 async function carregarDados() {
-  try {
-    const res = await fetch(API);
-    const dados = await res.json();
+  const res = await fetch(API);
+  const dados = await res.json();
 
-    console.log("API DATA:", dados); // 🔥 debug
+  const linhas = dados.slice(1);
 
-    // remove header
-    const linhas = dados.slice(1);
+  candidatos = linhas.map((l, i) => ({
+    nome: l[1],
+    vaga: l[3],
+    curriculo: l[4],
+    status: l[5],
+    linha: i + 2
+  }));
 
-    candidatos = linhas.map((linha, index) => ({
-      nome: linha[1] || "-",
-      vaga: linha[3] || "-",
-      curriculo: linha[4] || "",
-      status: linha[5] || "Em análise",
-      linhaReal: index + 2
-    }));
+  render();
+}
 
-    atualizarTabela();
-    atualizarDashboard();
-
-  } catch (erro) {
-    console.error("Erro ao carregar dados:", erro);
-  }
+/* RENDER */
+function render() {
+  renderTabela();
+  renderGrafico();
 }
 
 /* TABELA */
-function atualizarTabela() {
+function renderTabela() {
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
 
@@ -52,57 +55,60 @@ function atualizarTabela() {
         <td>${c.nome}</td>
         <td>${c.vaga}</td>
         <td>${c.status}</td>
-        <td>-</td>
         <td>${c.curriculo ? `<a href="${c.curriculo}" target="_blank">Ver</a>` : "-"}</td>
         <td>
-          <button class="btn-analise" onclick="mudarStatus(${i}, 'Em análise')">🟡</button>
-          <button class="btn-aprovado" onclick="mudarStatus(${i}, 'Aprovado')">✅</button>
-          <button class="btn-reprovado" onclick="mudarStatus(${i}, 'Reprovado')">❌</button>
+          <button onclick="mudarStatus(${i}, 'Em análise')" class="btn-analise">🟡</button>
+          <button onclick="mudarStatus(${i}, 'Aprovado')" class="btn-aprovado">✅</button>
+          <button onclick="mudarStatus(${i}, 'Reprovado')" class="btn-reprovado">❌</button>
         </td>
       </tr>
     `;
   });
 }
 
-/* 🔥 MUDAR STATUS */
-async function mudarStatus(index, status) {
+/* STATUS */
+async function mudarStatus(i, status) {
 
-  candidatos[index].status = status;
-  atualizarTabela();
-  atualizarDashboard();
+  const row = candidatos[i];
 
-  try {
-    await fetch(API, {
-      method: "POST",
-      body: JSON.stringify({
-        linha: candidatos[index].linhaReal,
-        status: status
-      })
-    });
+  // UI instantânea (sem delay)
+  row.status = status;
+  render();
 
-  } catch (erro) {
-    console.error("Erro ao salvar:", erro);
-  }
+  document.body.classList.add("loading");
+
+  await fetch(API, {
+    method: "POST",
+    body: JSON.stringify({
+      linha: row.linha,
+      status: status
+    })
+  });
+
+  document.body.classList.remove("loading");
+
+  mostrarToast("✅ Status atualizado!");
 }
 
-/* DASHBOARD */
-function atualizarDashboard() {
-  const total = candidatos.length;
-  const aprovados = candidatos.filter(c => c.status === "Aprovado").length;
-  const analise = candidatos.filter(c => c.status === "Em análise").length;
-  const reprovado = candidatos.filter(c => c.status === "Reprovado").length;
+/* GRAFICO */
+function renderGrafico() {
 
-  document.getElementById("total").innerText = total;
-  document.getElementById("aprovados").innerText = aprovados;
+  const counts = {
+    "Em análise": 0,
+    "Aprovado": 0,
+    "Reprovado": 0
+  };
+
+  candidatos.forEach(c => counts[c.status]++);
 
   if (grafico) grafico.destroy();
 
   grafico = new Chart(document.getElementById("grafico"), {
     type: "doughnut",
     data: {
-      labels: ["Em análise", "Aprovado", "Reprovado"],
+      labels: Object.keys(counts),
       datasets: [{
-        data: [analise, aprovados, reprovado],
+        data: Object.values(counts),
         backgroundColor: ["#facc15", "#22c55e", "#ef4444"]
       }]
     },
@@ -111,6 +117,9 @@ function atualizarDashboard() {
       maintainAspectRatio: false
     }
   });
+
+  document.getElementById("total").innerText = candidatos.length;
+  document.getElementById("aprovados").innerText = counts["Aprovado"];
 }
 
 /* BUSCA */
@@ -119,11 +128,11 @@ document.addEventListener("DOMContentLoaded", () => {
   carregarDados();
 
   document.getElementById("busca").addEventListener("input", e => {
-    const termo = e.target.value.toLowerCase();
+    const t = e.target.value.toLowerCase();
 
     const filtrado = candidatos.filter(c =>
-      c.nome.toLowerCase().includes(termo) ||
-      c.vaga.toLowerCase().includes(termo)
+      c.nome.toLowerCase().includes(t) ||
+      c.vaga.toLowerCase().includes(t)
     );
 
     const tbody = document.getElementById("tbody");
@@ -135,12 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <td>${c.nome}</td>
           <td>${c.vaga}</td>
           <td>${c.status}</td>
-          <td>-</td>
           <td>${c.curriculo ? `<a href="${c.curriculo}" target="_blank">Ver</a>` : "-"}</td>
           <td>
-            <button class="btn-analise" onclick="mudarStatus(${i}, 'Em análise')">🟡</button>
-            <button class="btn-aprovado" onclick="mudarStatus(${i}, 'Aprovado')">✅</button>
-            <button class="btn-reprovado" onclick="mudarStatus(${i}, 'Reprovado')">❌</button>
+            <button onclick="mudarStatus(${i}, 'Em análise')" class="btn-analise">🟡</button>
+            <button onclick="mudarStatus(${i}, 'Aprovado')" class="btn-aprovado">✅</button>
+            <button onclick="mudarStatus(${i}, 'Reprovado')" class="btn-reprovado">❌</button>
           </td>
         </tr>
       `;
