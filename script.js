@@ -3,40 +3,57 @@ const API = "https://script.google.com/macros/s/AKfycbxdqGlqydqKBHC_P0_zN8qK9ren
 let candidatos = [];
 let grafico;
 
-/* MENU */
+/* MENU MOBILE */
 function toggleMenu() {
   document.querySelector(".sidebar").classList.toggle("active");
 }
 
-/* PAGINAS */
+/* TROCAR PAGINA */
 function mostrarPagina(pagina) {
   document.querySelectorAll(".pagina").forEach(p => p.style.display = "none");
   document.getElementById(pagina).style.display = "block";
 }
 
-/* 🔥 CARREGAR DADOS CORRETO */
+/* 🔥 CARREGAR DADOS (CORRIGIDO DEFINITIVO) */
 async function carregarDados() {
   try {
     const res = await fetch(API);
     const dados = await res.json();
 
-    // 🔥 CONVERSÃO DA PLANILHA
-    candidatos = dados.map(linha => ({
-      nome: linha[1],
-      vaga: linha[3],
-      curriculo: linha[4],
-      status: linha[5]
-    }));
+    // 🔥 DETECTA FORMATO AUTOMATICAMENTE
+    if (Array.isArray(dados) && Array.isArray(dados[0])) {
+
+      // 📊 FORMATO PLANILHA (array de arrays)
+      candidatos = dados.map((linha, index) => ({
+        nome: linha[1],
+        vaga: linha[3],
+        curriculo: linha[4],
+        status: linha[5],
+        linhaReal: index + 2 // 🔥 importante pra salvar correto
+      }));
+
+    } else {
+
+      // 📦 FORMATO OBJETO (JSON moderno)
+      candidatos = dados.map((item, index) => ({
+        nome: item.nome,
+        vaga: item.vaga,
+        curriculo: item.curriculo,
+        status: item.status,
+        linhaReal: index + 2
+      }));
+
+    }
 
     atualizarTabela();
     atualizarDashboard();
 
   } catch (erro) {
-    console.error("Erro:", erro);
+    console.error("Erro ao carregar dados:", erro);
   }
 }
 
-/* TABELA */
+/* 📋 TABELA */
 function atualizarTabela() {
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
@@ -44,11 +61,11 @@ function atualizarTabela() {
   candidatos.forEach((c, i) => {
     tbody.innerHTML += `
       <tr>
-        <td>${c.nome}</td>
-        <td>${c.vaga}</td>
-        <td>${c.status}</td>
+        <td>${c.nome || "-"}</td>
+        <td>${c.vaga || "-"}</td>
+        <td>${c.status || "-"}</td>
         <td>-</td>
-        <td><a href="${c.curriculo}" target="_blank">Ver</a></td>
+        <td>${c.curriculo ? `<a href="${c.curriculo}" target="_blank">Ver</a>` : "-"}</td>
         <td>
           <button class="btn-analise" onclick="mudarStatus(${i}, 'Em análise')">🟡</button>
           <button class="btn-aprovado" onclick="mudarStatus(${i}, 'Aprovado')">✅</button>
@@ -59,9 +76,10 @@ function atualizarTabela() {
   });
 }
 
-/* 🔥 SEM DELAY */
+/* 🔥 MUDAR STATUS (SEM DELAY + SEM VOLTAR BUG) */
 async function mudarStatus(index, status) {
 
+  // Atualiza na tela IMEDIATO
   candidatos[index].status = status;
   atualizarTabela();
   atualizarDashboard();
@@ -70,16 +88,17 @@ async function mudarStatus(index, status) {
     await fetch(API, {
       method: "POST",
       body: JSON.stringify({
-        linha: index + 2,
+        linha: candidatos[index].linhaReal,
         status: status
       })
     });
+
   } catch (erro) {
     console.error("Erro ao salvar:", erro);
   }
 }
 
-/* DASHBOARD */
+/* 📊 DASHBOARD */
 function atualizarDashboard() {
   const total = candidatos.length;
   const aprovados = candidatos.filter(c => c.status === "Aprovado").length;
@@ -107,5 +126,38 @@ function atualizarDashboard() {
   });
 }
 
-/* INIT */
-carregarDados();
+/* 🔍 BUSCA */
+document.addEventListener("DOMContentLoaded", () => {
+
+  carregarDados();
+
+  document.getElementById("busca").addEventListener("input", e => {
+    const termo = e.target.value.toLowerCase();
+
+    const filtrado = candidatos.filter(c =>
+      (c.nome || "").toLowerCase().includes(termo) ||
+      (c.vaga || "").toLowerCase().includes(termo)
+    );
+
+    const tbody = document.getElementById("tbody");
+    tbody.innerHTML = "";
+
+    filtrado.forEach((c, i) => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${c.nome}</td>
+          <td>${c.vaga}</td>
+          <td>${c.status}</td>
+          <td>-</td>
+          <td>${c.curriculo ? `<a href="${c.curriculo}" target="_blank">Ver</a>` : "-"}</td>
+          <td>
+            <button class="btn-analise" onclick="mudarStatus(${i}, 'Em análise')">🟡</button>
+            <button class="btn-aprovado" onclick="mudarStatus(${i}, 'Aprovado')">✅</button>
+            <button class="btn-reprovado" onclick="mudarStatus(${i}, 'Reprovado')">❌</button>
+          </td>
+        </tr>
+      `;
+    });
+  });
+
+});
