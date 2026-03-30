@@ -8,18 +8,22 @@
 /* BODY */
 body {
   font-family: "Segoe UI", Arial;
-  display: flex;
   background: #0f172a;
   color: #fff;
 }
 
+/* LAYOUT BASE */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
 /* SIDEBAR */
 .sidebar {
-  width: 220px;
+  width: 240px;
   background: #020617;
   padding: 20px;
-  min-height: 100vh;
-  transition: 0.3s;
+  flex-shrink: 0;
 }
 
 .sidebar h2 {
@@ -36,80 +40,63 @@ body {
   border-radius: 8px;
   cursor: pointer;
   color: #cbd5f5;
-  transition: 0.2s;
 }
 
-.sidebar li.active,
 .sidebar li:hover {
   background: #1e293b;
 }
 
-/* MENU MOBILE */
-.menu-btn {
-  display: none;
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  background: #38bdf8;
-  color: black;
-  padding: 10px;
-  border-radius: 8px;
-  z-index: 1000;
-  cursor: pointer;
-}
-
-/* MAIN (🔥 CORRIGIDO) */
+/* CONTAINER PRINCIPAL (🔥 SEGREDO AQUI) */
 .main {
   flex: 1;
-  padding: 25px;
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
 }
 
-/* PÁGINA */
-.pagina {
-  animation: fade 0.3s;
+/* CONTEÚDO */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  padding: 24px;
 }
 
-@keyframes fade {
-  from {opacity:0; transform: translateY(10px);}
-  to {opacity:1;}
+/* TITULOS */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
 /* CARDS */
 .cards {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
 .card {
-  flex: 1;
   background: #1e293b;
   padding: 20px;
   border-radius: 12px;
   text-align: center;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
-/* AÇÃO */
-.last-action {
+/* GRAFICO */
+.grafico-container {
+  margin-top: 20px;
   background: #1e293b;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  color: #38bdf8;
+  padding: 20px;
+  border-radius: 12px;
 }
 
 /* INPUT */
 input {
   width: 100%;
   padding: 10px;
+  margin: 15px 0;
   border-radius: 8px;
   border: none;
   background: #020617;
   color: white;
-  margin-bottom: 15px;
 }
 
 /* TABELA */
@@ -121,33 +108,21 @@ table {
   width: 100%;
   background: #1e293b;
   border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
 th, td {
   padding: 12px;
-  text-align: left;
 }
 
 th {
   background: #334155;
 }
 
-tr {
-  border-bottom: 1px solid #334155;
-}
-
-tr:hover {
-  background: #2a3b55;
-}
-
 /* BADGES */
 .badge {
-  padding: 6px 12px;
+  padding: 5px 10px;
   border-radius: 20px;
   font-size: 12px;
-  white-space: nowrap;
 }
 
 .aprovado { background: #22c55e; color: black; }
@@ -156,8 +131,8 @@ tr:hover {
 
 /* BOTÕES */
 button {
+  padding: 6px 8px;
   border: none;
-  padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
 }
@@ -166,50 +141,35 @@ button {
 .btn-aprovado { background: #22c55e; }
 .btn-reprovado { background: #ef4444; }
 
-/* GRAFICO */
-.grafico-container {
-  margin-top: 20px;
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-}
-
-/* MOBILE */
+/* 📱 MOBILE */
 @media (max-width: 768px) {
 
-  body {
+  .layout {
     flex-direction: column;
   }
 
   .sidebar {
-    position: fixed;
-    left: -100%;
-    top: 0;
-    height: 100%;
-    z-index: 999;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
   }
 
-  .sidebar.active {
-    left: 0;
-  }
-
-  .menu-btn {
-    display: block;
+  .container {
+    padding: 16px;
   }
 
   .cards {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
-  .main {
-    padding: 15px;
+  h1 {
+    font-size: 20px;
   }
 }
 
-/* TELAS MUITO GRANDES */
-@media (min-width: 1600px) {
-  .main {
-    max-width: 1400px;
+/* 💻 TELAS GRANDES */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1200px;
   }
 }
