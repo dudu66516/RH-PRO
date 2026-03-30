@@ -14,21 +14,20 @@ function mostrarPagina(pagina) {
   document.getElementById(pagina).style.display = "block";
 }
 
-/* 🔥 CARREGAR DADOS (100% CORRIGIDO) */
+/* 🔥 CARREGAR DADOS (100% INTELIGENTE) */
 async function carregarDados() {
   try {
     const res = await fetch(API);
     const dados = await res.json();
 
+    // 🧠 CASO 1: PLANILHA (array de arrays)
     if (Array.isArray(dados) && Array.isArray(dados[0])) {
 
-      // 🔥 detecta automaticamente header
       const temHeader = dados[0][1] === "Nome";
-
       const linhas = temHeader ? dados.slice(1) : dados;
 
       candidatos = linhas
-        .filter(linha => linha[1]) // ignora linhas vazias
+        .filter(linha => linha[1]) // ignora vazios
         .map((linha, index) => ({
           nome: linha[1] || "-",
           vaga: linha[3] || "-",
@@ -37,14 +36,16 @@ async function carregarDados() {
           linhaReal: index + (temHeader ? 2 : 1)
         }));
 
-    } else {
+    }
 
-      // caso API venha como JSON objeto
+    // 🧠 CASO 2: JSON (array de objetos)
+    else if (Array.isArray(dados)) {
+
       candidatos = dados.map((item, index) => ({
-        nome: item.nome,
-        vaga: item.vaga,
-        curriculo: item.curriculo,
-        status: item.status,
+        nome: item.nome || "-",
+        vaga: item.vaga || "-",
+        curriculo: item.curriculo || "",
+        status: item.status || "Em análise",
         linhaReal: index + 2
       }));
 
@@ -81,10 +82,10 @@ function atualizarTabela() {
   });
 }
 
-/* 🔥 MUDAR STATUS (SEM BUG) */
+/* 🔥 MUDAR STATUS (SEM BUG E SEM DELAY) */
 async function mudarStatus(index, status) {
 
-  // atualização instantânea (sem delay visual)
+  // Atualiza na tela na hora
   candidatos[index].status = status;
   atualizarTabela();
   atualizarDashboard();
