@@ -1,27 +1,9 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
+  margin: 0;
   font-family: Arial;
   display: flex;
   background: #0f172a;
-  color: #fff;
-}
-
-/* MENU */
-.menu-btn {
-  display: none;
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  background: #1e293b;
-  padding: 10px;
-  border-radius: 8px;
-  z-index: 1000;
-  cursor: pointer;
+  color: white;
 }
 
 /* SIDEBAR */
@@ -29,109 +11,49 @@ body {
   width: 220px;
   background: #020617;
   padding: 20px;
-  min-height: 100vh;
-  transition: 0.3s;
-}
-
-.sidebar h2 {
-  color: #38bdf8;
-  margin-bottom: 20px;
 }
 
 .sidebar li {
-  padding: 12px;
-  border-radius: 8px;
+  padding: 10px;
   cursor: pointer;
 }
 
-.sidebar li:hover {
-  background: #1e293b;
-}
-
-/* MAIN */
 .main {
   flex: 1;
   padding: 20px;
 }
 
-/* CONTAINER */
-.container {
-  max-width: 1100px;
-  margin: auto;
-}
-
 /* CARDS */
 .cards {
   display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 10px;
 }
 
 .card {
-  flex: 1;
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-}
-
-.card h2 {
-  font-size: 30px;
-}
-
-/* GRAFICO */
-.grafico-container {
   background: #1e293b;
   padding: 20px;
   border-radius: 10px;
-  height: 320px;
-}
-
-#grafico {
-  max-height: 260px;
-}
-
-/* INPUT */
-input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  background: #020617;
-  color: white;
-  margin-bottom: 15px;
+  flex: 1;
 }
 
 /* TABELA */
-.table-container {
-  overflow-x: auto;
-}
-
 table {
   width: 100%;
-  min-width: 600px;
+  margin-top: 15px;
   background: #1e293b;
   border-radius: 10px;
 }
 
 th, td {
-  padding: 12px;
-}
-
-th {
-  background: #334155;
+  padding: 10px;
 }
 
 /* BOTÕES */
-td:last-child {
-  display: flex;
-  gap: 5px;
-}
-
 button {
-  padding: 6px;
-  border-radius: 6px;
   border: none;
+  padding: 6px;
+  margin: 2px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
@@ -139,51 +61,24 @@ button {
 .btn-aprovado { background: #22c55e; }
 .btn-reprovado { background: #ef4444; }
 
-/* TABLET */
-@media (max-width: 900px) {
-  .cards {
-    flex-direction: column;
-  }
+/* LOADING */
+.loading {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
-/* MOBILE */
-@media (max-width: 700px) {
+/* TOAST */
+#toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #22c55e;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: none;
+}
 
-  body {
-    flex-direction: column;
-  }
-
-  .menu-btn {
-    display: block;
-  }
-
-  .sidebar {
-    position: fixed;
-    left: -220px;
-    top: 0;
-  }
-
-  .sidebar.active {
-    left: 0;
-  }
-
-  .cards {
-    flex-direction: column;
-  }
-
-  .grafico-container {
-    height: 220px;
-  }
-
-  #grafico {
-    max-height: 180px;
-  }
-
-  h1 {
-    font-size: 20px;
-  }
-
-  .card h2 {
-    font-size: 24px;
-  }
+/* GRAFICO */
+.grafico-container {
+  height: 300px;
 }
