@@ -1,55 +1,37 @@
-const API = "https://script.google.com/macros/s/AKfycbxdqGlqydqKBHC_P0_zN8qK9ren9k07mHuk12vdqyuvYZPUi3a1DUU-CojaArIp3w4DRQ/exec";
+const API = "https://script.google.com/macros/s/AKfycbxl_32ZS2tOeuHY_bvEpJaVLykpjqPWhOSt9YzEtg_D2C3AAlYAqyYGL6qj_mUVMW5K4Q/exec";
 
 let candidatos = [];
 let grafico;
 
-/* MENU MOBILE */
+/* MENU */
 function toggleMenu() {
   document.querySelector(".sidebar").classList.toggle("active");
 }
 
-/* TROCAR PAGINA */
+/* PAGINAS */
 function mostrarPagina(pagina) {
   document.querySelectorAll(".pagina").forEach(p => p.style.display = "none");
   document.getElementById(pagina).style.display = "block";
 }
 
-/* 🔥 CARREGAR DADOS (100% INTELIGENTE) */
+/* 🔥 CARREGAR DADOS (AJUSTADO PRA SUA API REAL) */
 async function carregarDados() {
   try {
     const res = await fetch(API);
     const dados = await res.json();
 
-    // 🧠 CASO 1: PLANILHA (array de arrays)
-    if (Array.isArray(dados) && Array.isArray(dados[0])) {
+    console.log("API DATA:", dados); // 🔥 debug
 
-      const temHeader = dados[0][1] === "Nome";
-      const linhas = temHeader ? dados.slice(1) : dados;
+    // remove header
+    const linhas = dados.slice(1);
 
-      candidatos = linhas
-        .filter(linha => linha[1]) // ignora vazios
-        .map((linha, index) => ({
-          nome: linha[1] || "-",
-          vaga: linha[3] || "-",
-          curriculo: linha[4] || "",
-          status: linha[5] || "Em análise",
-          linhaReal: index + (temHeader ? 2 : 1)
-        }));
-
-    }
-
-    // 🧠 CASO 2: JSON (array de objetos)
-    else if (Array.isArray(dados)) {
-
-      candidatos = dados.map((item, index) => ({
-        nome: item.nome || "-",
-        vaga: item.vaga || "-",
-        curriculo: item.curriculo || "",
-        status: item.status || "Em análise",
-        linhaReal: index + 2
-      }));
-
-    }
+    candidatos = linhas.map((linha, index) => ({
+      nome: linha[1] || "-",
+      vaga: linha[3] || "-",
+      curriculo: linha[4] || "",
+      status: linha[5] || "Em análise",
+      linhaReal: index + 2
+    }));
 
     atualizarTabela();
     atualizarDashboard();
@@ -59,7 +41,7 @@ async function carregarDados() {
   }
 }
 
-/* 📋 TABELA */
+/* TABELA */
 function atualizarTabela() {
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
@@ -82,10 +64,9 @@ function atualizarTabela() {
   });
 }
 
-/* 🔥 MUDAR STATUS (SEM BUG E SEM DELAY) */
+/* 🔥 MUDAR STATUS */
 async function mudarStatus(index, status) {
 
-  // Atualiza na tela na hora
   candidatos[index].status = status;
   atualizarTabela();
   atualizarDashboard();
@@ -104,7 +85,7 @@ async function mudarStatus(index, status) {
   }
 }
 
-/* 📊 DASHBOARD */
+/* DASHBOARD */
 function atualizarDashboard() {
   const total = candidatos.length;
   const aprovados = candidatos.filter(c => c.status === "Aprovado").length;
@@ -132,7 +113,7 @@ function atualizarDashboard() {
   });
 }
 
-/* 🔍 BUSCA */
+/* BUSCA */
 document.addEventListener("DOMContentLoaded", () => {
 
   carregarDados();
@@ -141,8 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const termo = e.target.value.toLowerCase();
 
     const filtrado = candidatos.filter(c =>
-      (c.nome || "").toLowerCase().includes(termo) ||
-      (c.vaga || "").toLowerCase().includes(termo)
+      c.nome.toLowerCase().includes(termo) ||
+      c.vaga.toLowerCase().includes(termo)
     );
 
     const tbody = document.getElementById("tbody");
