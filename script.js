@@ -14,27 +14,32 @@ function mostrarPagina(pagina) {
   document.getElementById(pagina).style.display = "block";
 }
 
-/* 🔥 CARREGAR DADOS (CORRIGIDO DEFINITIVO) */
+/* 🔥 CARREGAR DADOS (100% CORRIGIDO) */
 async function carregarDados() {
   try {
     const res = await fetch(API);
     const dados = await res.json();
 
-    // 🔥 DETECTA FORMATO AUTOMATICAMENTE
     if (Array.isArray(dados) && Array.isArray(dados[0])) {
 
-      // 📊 FORMATO PLANILHA (array de arrays)
-      candidatos = dados.map((linha, index) => ({
-        nome: linha[1],
-        vaga: linha[3],
-        curriculo: linha[4],
-        status: linha[5],
-        linhaReal: index + 2 // 🔥 importante pra salvar correto
-      }));
+      // 🔥 detecta automaticamente header
+      const temHeader = dados[0][1] === "Nome";
+
+      const linhas = temHeader ? dados.slice(1) : dados;
+
+      candidatos = linhas
+        .filter(linha => linha[1]) // ignora linhas vazias
+        .map((linha, index) => ({
+          nome: linha[1] || "-",
+          vaga: linha[3] || "-",
+          curriculo: linha[4] || "",
+          status: linha[5] || "Em análise",
+          linhaReal: index + (temHeader ? 2 : 1)
+        }));
 
     } else {
 
-      // 📦 FORMATO OBJETO (JSON moderno)
+      // caso API venha como JSON objeto
       candidatos = dados.map((item, index) => ({
         nome: item.nome,
         vaga: item.vaga,
@@ -61,9 +66,9 @@ function atualizarTabela() {
   candidatos.forEach((c, i) => {
     tbody.innerHTML += `
       <tr>
-        <td>${c.nome || "-"}</td>
-        <td>${c.vaga || "-"}</td>
-        <td>${c.status || "-"}</td>
+        <td>${c.nome}</td>
+        <td>${c.vaga}</td>
+        <td>${c.status}</td>
         <td>-</td>
         <td>${c.curriculo ? `<a href="${c.curriculo}" target="_blank">Ver</a>` : "-"}</td>
         <td>
@@ -76,10 +81,10 @@ function atualizarTabela() {
   });
 }
 
-/* 🔥 MUDAR STATUS (SEM DELAY + SEM VOLTAR BUG) */
+/* 🔥 MUDAR STATUS (SEM BUG) */
 async function mudarStatus(index, status) {
 
-  // Atualiza na tela IMEDIATO
+  // atualização instantânea (sem delay visual)
   candidatos[index].status = status;
   atualizarTabela();
   atualizarDashboard();
