@@ -9,6 +9,8 @@
 </head>
 <body>
 
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+
 <div class="sidebar">
   <h2>🚀 RS</h2>
   <ul>
@@ -35,7 +37,7 @@
       </div>
 
       <div class="card">
-        <h2 id="tempoMedio">—</h2>
+        <h2 id="tempoMedio">0</h2>
         <p>Dias médios</p>
       </div>
     </div>
@@ -55,19 +57,21 @@
 
     <input id="busca" placeholder="🔍 Buscar...">
 
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Vaga</th>
-          <th>Status</th>
-          <th>Tempo</th>
-          <th>Currículo</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Vaga</th>
+            <th>Status</th>
+            <th>Tempo</th>
+            <th>Currículo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
   </div>
 
 </div>
