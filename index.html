@@ -9,22 +9,20 @@
 </head>
 <body>
 
-<!-- 🔥 BOTÃO MOBILE -->
+<!-- MENU MOBILE -->
 <div class="menu-btn" onclick="toggleMenu()">☰</div>
 
-<!-- 🔥 SIDEBAR -->
+<!-- SIDEBAR -->
 <div class="sidebar">
   <h2>🚀 RS</h2>
   <ul>
-    <li data-page="dashboard" class="active">📊 Dashboard</li>
-    <li data-page="candidatos">👥 Candidatos</li>
+    <li onclick="mostrarPagina('dashboard')">📊 Dashboard</li>
+    <li onclick="mostrarPagina('candidatos')">👥 Candidatos</li>
   </ul>
 </div>
 
-<!-- 🔥 MAIN -->
+<!-- MAIN -->
 <div class="main">
-
-  <!-- 🔥 CONTAINER CENTRAL (ESSENCIAL) -->
   <div class="container">
 
     <!-- DASHBOARD -->
@@ -80,9 +78,8 @@
       </div>
     </div>
 
-  </div> <!-- FIM CONTAINER -->
-
-</div> <!-- FIM MAIN -->
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
